@@ -4,6 +4,18 @@ const SERVICE_ID = 'service_j1yaxig';
 const TEMPLATE_ID = 'template_xh527cn';
 const PUBLIC_KEY = 'QmaTuceXWt6odkdca';
 
+// Utility function to convert 24-hour time to 12-hour format with AM/PM
+const formatTimeTo12Hour = (time24) => {
+  if (!time24) return "";
+  
+  const [hours, minutes] = time24.split(':');
+  const hour = parseInt(hours, 10);
+  const isPM = hour >= 12;
+  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  
+  return `${displayHour}:${minutes} ${isPM ? 'PM' : 'AM'}`;
+};
+
 // Initialize EmailJS
 emailjs.init(PUBLIC_KEY);
 
@@ -12,7 +24,7 @@ export const sendHabitReminder = async (habit, userName) => {
     const templateParams = {
       user_name: userName,
       habit_name: habit.name,
-      reminder_time: habit.reminderTime,
+      reminder_time: formatTimeTo12Hour(habit.reminderTime),
       to_email: habit.userEmail
     };
 

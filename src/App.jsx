@@ -20,6 +20,18 @@ import {
 } from "firebase/auth";
 import { sendHabitReminder, shouldSendReminder } from "./emailService";
 
+// Utility function to convert 24-hour time to 12-hour format with AM/PM
+const formatTimeTo12Hour = (time24) => {
+  if (!time24) return "";
+
+  const [hours, minutes] = time24.split(":");
+  const hour = parseInt(hours, 10);
+  const isPM = hour >= 12;
+  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+
+  return `${displayHour}:${minutes} ${isPM ? "PM" : "AM"}`;
+};
+
 export default function HabitTracker() {
   const [habits, setHabits] = useState([]);
   const [newHabit, setNewHabit] = useState("");
@@ -343,7 +355,7 @@ export default function HabitTracker() {
                     </span>
                     <span className="reminder-time">
                       <Bell size={14} />
-                      {habit.reminderTime}
+                      {formatTimeTo12Hour(habit.reminderTime)}
                     </span>
                   </div>
                 </div>
